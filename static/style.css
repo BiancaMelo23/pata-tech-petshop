@@ -1,3 +1,4 @@
+/* Configuração geral da página e fundo com imagem e efeito escurecido */
 body {
   font-family: "Poppins", sans-serif;
   background:
@@ -13,9 +14,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 5%;
+  padding-left: 5%; /* Posiciona a caixa longe da orelha do gato na imagem de fundo */
 }
 
+/* Caixa principal translúcida (Efeito Glassmorphism) com borda preta */
 .container {
   background: rgba(255, 255, 255, 0.38);
   backdrop-filter: blur(6px);
@@ -29,6 +31,7 @@ body {
   border: 2px solid #000000;
 }
 
+/* Estilização do Título com efeito 3D (sombra dupla) */
 h1 {
   color: #d35400;
   font-weight: 700;
@@ -46,6 +49,7 @@ p {
   font-size: 13px;
 }
 
+/* Caixa destacada do contador de pets */
 .contador {
   background: rgba(255, 255, 255, 0.7);
   padding: 6px;
@@ -55,6 +59,7 @@ p {
   margin-bottom: 15px;
 }
 
+/* Organização do formulário */
 form {
   display: flex;
   gap: 8px;
@@ -63,6 +68,7 @@ form {
   flex-wrap: wrap;
 }
 
+/* Estilo dos campos de texto e números */
 input {
   padding: 10px 12px;
   border: 2px solid #000000;
@@ -75,12 +81,14 @@ input {
   background-color: rgba(255, 255, 255, 0.85);
 }
 
+/* Efeito quando o usuário clica para digitar no input */
 input:focus {
   border-color: #ff9f43;
   background-color: #fff;
   box-shadow: 0 0 8px rgba(255, 159, 67, 0.5);
 }
 
+/* Estilização do botão principal de cadastro */
 button {
   padding: 10px 15px;
   background: linear-gradient(135deg, #ff9f43, #e67e22);
@@ -95,6 +103,7 @@ button {
   transition: all 0.3s ease;
 }
 
+/* Efeito ao passar o mouse por cima do botão */
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
@@ -115,6 +124,7 @@ h2 {
   padding-bottom: 5px;
 }
 
+/* Área da lista com barra de rolagem caso tenha muitos pets */
 .lista-container {
   max-height: 150px;
   overflow-y: auto;
@@ -122,6 +132,7 @@ h2 {
   padding-right: 5px;
 }
 
+/* Cartão individual de cada pet listado */
 .pet-card {
   background: rgba(255, 255, 255, 0.9);
   margin: 8px 0;
@@ -149,6 +160,7 @@ h2 {
   font-size: 13px;
 }
 
+/* Etiqueta colorida de espécie e peso */
 .info-tag {
   background: #fff3e6;
   color: #d35400;
@@ -164,6 +176,7 @@ h2 {
   gap: 4px;
 }
 
+/* Estilo dos botões de editar e excluir */
 .btn-acao {
   text-decoration: none;
   padding: 4px 6px;
@@ -174,17 +187,18 @@ h2 {
 }
 
 .btn-editar {
-  background-color: #f1c40f;
+  background-color: #f1c40f; /* Amarelo */
 }
 
 .btn-excluir {
-  background-color: #e74c3c;
+  background-color: #e74c3c; /* Vermelho */
 }
 
 .btn-acao:hover {
   transform: scale(1.1);
 }
 
+/* Botão de voltar nas telas secundárias */
 .btn-voltar {
   display: inline-block;
   margin-top: 15px;
@@ -204,6 +218,7 @@ h2 {
   font-weight: 500;
 }
 
+/* Rodapé do sistema */
 .rodape-sistema {
   margin-top: 15px;
   font-size: 10px;

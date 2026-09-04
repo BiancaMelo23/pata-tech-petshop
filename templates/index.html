@@ -3,27 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <title>Pata Tech Petshop</title>
-    <!-- Fonte moderna do Google Fonts -->
+    <!-- Importando a fonte moderna 'Poppins' do Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Ligando o nosso arquivo de estilos CSS -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
   <body>
+    <!-- Caixa translúcida principal (Glassmorphism) -->
     <div class="container">
+      <!-- Título principal com efeito visual -->
       <h1>🐾 Pata Tech Petshop 🐾</h1>
       <p>Cadastre os pets e acompanhe os atendimentos em tempo real.</p>
 
-      <!-- Contador inteligente de pets -->
+      <!-- Contador inteligente que conta quantos itens tem na lista de pets -->
       <p class="contador">
         🐾 Total de pets cadastrados: <strong>{{ pets | length }}</strong>
       </p>
 
-      <!-- Formulário para cadastrar -->
+      <!-- Formulário para envio de dados para o Back-end -->
       <form action="/" method="POST">
         <input type="text" name="nome" placeholder="Nome do Pet" required />
         <input
@@ -45,10 +48,12 @@
       <h2>Pets Cadastrados:</h2>
 
       <div class="lista-container">
+        <!-- Laço de repetição: Passa por cada pet salvo no banco de dados -->
         {% for pet in pets %}
         <div class="pet-card">
           <div class="pet-info">
             <span class="info-nome">
+              <!-- Condicional inteligente: Escolhe o emoji com base no que foi digitado na espécie -->
               {% if 'gato' in pet.especie | lower or 'gata' in pet.especie |
               lower %} 🐱 {% elif 'cao' in pet.especie | lower or 'cão' in
               pet.especie | lower or 'cachorro' in pet.especie | lower or
@@ -58,6 +63,7 @@
             <span class="info-tag">Espécie: {{ pet.especie }}</span>
             <span class="info-tag">Peso: {{ pet.kilos }} kg</span>
           </div>
+          <!-- Botões de Ação para Editar e Excluir repassando o ID específico do pet -->
           <div class="acoes">
             <a
               href="/editar/{{ pet.id }}"
@@ -74,10 +80,12 @@
           </div>
         </div>
         {% else %}
+        <!-- Mensagem exibida caso a lista esteja vazia -->
         <p class="vazio">Nenhum pet cadastrado ainda. Seja o primeiro!</p>
         {% endfor %}
       </div>
 
+      <!-- Rodapé corporativo do sistema -->
       <div class="rodape-sistema">
         <small>Pata Tech System v1.0 - Desenvolvido com Python & Flask</small>
       </div>
