@@ -1,0 +1,155 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+    url("fundo-petshop.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center; /* Centraliza geral na tela */
+  align-items: center;
+  padding-left: 5%; /* Empurra a caixa para a direita na medida exata, sem colar na borda */
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  border: 2px solid #000000;
+}
+
+h1 {
+  color: #111111;
+  font-weight: 700;
+  font-size: 26px; /* Letra maior */
+  margin-bottom: 5px;
+  /* Efeito 3D com sombra dupla */
+  text-shadow:
+    2px 2px 0px #ffffff,
+    4px 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+p {
+  color: #222;
+  font-weight: 400;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+input {
+  padding: 10px 12px;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  width: 30%;
+  font-size: 12px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+input:focus {
+  border-color: #ff9f43;
+  background-color: #fff;
+  box-shadow: 0 0 8px rgba(255, 159, 67, 0.5);
+}
+
+button {
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #ff9f43, #e67e22);
+  color: white;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: "Poppins", sans-serif;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #ffa85c, #d35400);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+h2 {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  text-align: left;
+  border-bottom: 2px solid #000000;
+  padding-bottom: 5px;
+}
+
+.lista-container {
+  max-height: 150px;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-right: 5px;
+}
+
+.pet-card {
+  background: rgba(255, 255, 255, 0.85);
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #000000;
+  border-left: 4px solid #ff9f43;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.pet-card:hover {
+  transform: translateX(3px);
+}
+
+.info-nome {
+  font-weight: 600;
+  color: #000000;
+  font-size: 13px;
+}
+
+.info-tag {
+  background: #fff3e6;
+  color: #d35400;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.vazio {
+  font-size: 13px;
+  color: #222;
+  font-weight: 500;
+}
