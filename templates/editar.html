@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Editar Pet - Pata Tech Petshop</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🐾 Editar Pet 🐾</h1>
+      <p>Altere os dados do pet selecionado.</p>
+
+      <form action="/editar/{{ pet.id }}" method="POST">
+        <input type="text" name="nome" value="{{ pet.nome }}" required />
+        <input type="text" name="especie" value="{{ pet.especie }}" required />
+        <input
+          type="number"
+          step="0.1"
+          name="kilos"
+          value="{{ pet.kilos }}"
+          required
+        />
+        <button type="submit">Salvar Alterações</button>
+      </form>
+
+      <a href="{{ url_for('inicio') }}" class="btn-voltar"
+        >⬅️ Voltar para a página inicial</a
+      >
+    </div>
+  </body>
+</html>

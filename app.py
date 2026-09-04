@@ -7,7 +7,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pets.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Tabela atualizada com o campo 'kilos'
 class Pet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
@@ -24,7 +23,6 @@ def inicio():
         especie_pet = request.form.get('especie')
         kilos_pet = request.form.get('kilos')
         
-        # Salva o pet com o peso convertido para número
         novo_pet = Pet(nome=nome_pet, especie=especie_pet, kilos=float(kilos_pet))
         db.session.add(novo_pet)
         db.session.commit()
@@ -33,6 +31,26 @@ def inicio():
     
     lista_pets = Pet.query.all()
     return render_template('index.html', pets=lista_pets)
+
+@app.route('/deletar/<int:id>')
+def deletar(id):
+    pet = Pet.query.get_or_404(id)
+    db.session.delete(pet)
+    db.session.commit()
+    return redirect(url_for('inicio'))
+
+@app.route('/editar/<int:id>', methods=['GET', 'POST'])
+def editar(id):
+    pet = Pet.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        pet.nome = request.form.get('nome')
+        pet.especie = request.form.get('especie')
+        pet.kilos = float(request.form.get('kilos'))
+        db.session.commit()
+        return redirect(url_for('inicio'))
+        
+    return render_template('editar.html', pet=pet)
 
 if __name__ == '__main__':
     app.run(debug=True)

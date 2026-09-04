@@ -11,13 +11,13 @@ body {
   padding: 20px;
   min-height: 100vh;
   display: flex;
-  justify-content: center; /* Centraliza geral na tela */
+  justify-content: center;
   align-items: center;
-  padding-left: 5%; /* Empurra a caixa para a direita na medida exata, sem colar na borda */
+  padding-left: 5%;
 }
 
 .container {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.38);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   padding: 25px;
@@ -30,11 +30,10 @@ body {
 }
 
 h1 {
-  color: #111111;
+  color: #d35400;
   font-weight: 700;
-  font-size: 26px; /* Letra maior */
+  font-size: 25px;
   margin-bottom: 5px;
-  /* Efeito 3D com sombra dupla */
   text-shadow:
     2px 2px 0px #ffffff,
     4px 4px 6px rgba(0, 0, 0, 0.4);
@@ -43,8 +42,17 @@ h1 {
 p {
   color: #222;
   font-weight: 400;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   font-size: 13px;
+}
+
+.contador {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid #000;
+  font-weight: 500;
+  margin-bottom: 15px;
 }
 
 form {
@@ -64,7 +72,7 @@ input {
   font-family: "Poppins", sans-serif;
   outline: none;
   transition: all 0.3s ease;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.85);
 }
 
 input:focus {
@@ -115,7 +123,7 @@ h2 {
 }
 
 .pet-card {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   margin: 8px 0;
   padding: 8px 12px;
   border-radius: 10px;
@@ -125,11 +133,14 @@ h2 {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease;
 }
 
-.pet-card:hover {
-  transform: translateX(3px);
+.pet-info {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  text-align: left;
 }
 
 .info-nome {
@@ -141,15 +152,62 @@ h2 {
 .info-tag {
   background: #fff3e6;
   color: #d35400;
-  padding: 3px 8px;
+  padding: 3px 6px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 500;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+.acoes {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-acao {
+  text-decoration: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  border: 1px solid #000;
+  transition: transform 0.2s ease;
+}
+
+.btn-editar {
+  background-color: #f1c40f;
+}
+
+.btn-excluir {
+  background-color: #e74c3c;
+}
+
+.btn-acao:hover {
+  transform: scale(1.1);
+}
+
+.btn-voltar {
+  display: inline-block;
+  margin-top: 15px;
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #000;
+}
+
 .vazio {
   font-size: 13px;
   color: #222;
   font-weight: 500;
+}
+
+.rodape-sistema {
+  margin-top: 15px;
+  font-size: 10px;
+  color: #333;
+  border-top: 1px dashed rgba(0, 0, 0, 0.3);
+  padding-top: 5px;
 }

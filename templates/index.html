@@ -18,7 +18,12 @@
       <h1>🐾 Pata Tech Petshop 🐾</h1>
       <p>Cadastre os pets e acompanhe os atendimentos em tempo real.</p>
 
-      <!-- Formulário -->
+      <!-- Contador inteligente de pets -->
+      <p class="contador">
+        🐾 Total de pets cadastrados: <strong>{{ pets | length }}</strong>
+      </p>
+
+      <!-- Formulário para cadastrar -->
       <form action="/" method="POST">
         <input type="text" name="nome" placeholder="Nome do Pet" required />
         <input
@@ -42,19 +47,39 @@
       <div class="lista-container">
         {% for pet in pets %}
         <div class="pet-card">
-          <span class="info-nome">
-            <!-- Emoji dinâmico baseado na espécie digitada -->
-            {% if 'gato' in pet.especie | lower or 'gata' in pet.especie | lower
-            %} 🐱 {% elif 'cao' in pet.especie | lower or 'cão' in pet.especie |
-            lower or 'cachorro' in pet.especie | lower or 'cachorra' in
-            pet.especie | lower %} 🐶 {% else %} 🐾 {% endif %} {{ pet.nome }}
-          </span>
-          <span class="info-tag">Espécie: {{ pet.especie }}</span>
-          <span class="info-tag">Peso: {{ pet.kilos }} kg</span>
+          <div class="pet-info">
+            <span class="info-nome">
+              {% if 'gato' in pet.especie | lower or 'gata' in pet.especie |
+              lower %} 🐱 {% elif 'cao' in pet.especie | lower or 'cão' in
+              pet.especie | lower or 'cachorro' in pet.especie | lower or
+              'cachorra' in pet.especie | lower %} 🐶 {% else %} 🐾 {% endif %}
+              {{ pet.nome }}
+            </span>
+            <span class="info-tag">Espécie: {{ pet.especie }}</span>
+            <span class="info-tag">Peso: {{ pet.kilos }} kg</span>
+          </div>
+          <div class="acoes">
+            <a
+              href="/editar/{{ pet.id }}"
+              class="btn-acao btn-editar"
+              title="Editar"
+              >✏️</a
+            >
+            <a
+              href="/deletar/{{ pet.id }}"
+              class="btn-acao btn-excluir"
+              title="Excluir"
+              >🗑️</a
+            >
+          </div>
         </div>
         {% else %}
         <p class="vazio">Nenhum pet cadastrado ainda. Seja o primeiro!</p>
         {% endfor %}
+      </div>
+
+      <div class="rodape-sistema">
+        <small>Pata Tech System v1.0 - Desenvolvido com Python & Flask</small>
       </div>
     </div>
   </body>
