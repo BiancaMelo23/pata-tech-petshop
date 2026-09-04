@@ -17,11 +17,38 @@
       <h1>🐾 Editar Pet 🐾</h1>
       <p>Altere os dados do pet selecionado.</p>
 
-      <!-- Formulário que envia as alterações para a rota específica do ID do pet -->
       <form action="/editar/{{ pet.id }}" method="POST">
-        <!-- Os campos já vêm preenchidos (value) com os dados atuais salvos no banco -->
         <input type="text" name="nome" value="{{ pet.nome }}" required />
         <input type="text" name="especie" value="{{ pet.especie }}" required />
+
+        <!-- NOVO: Seleciona o sexo atual automaticamente na hora de editar -->
+        <select name="sexo" required>
+          <option
+            value="Macho"
+            {%
+            if
+            pet.sexo=""
+            ="Macho"
+            %}selected{%
+            endif
+            %}
+          >
+            Macho
+          </option>
+          <option
+            value="Fêmea"
+            {%
+            if
+            pet.sexo=""
+            ="Fêmea"
+            %}selected{%
+            endif
+            %}
+          >
+            Fêmea
+          </option>
+        </select>
+
         <input
           type="number"
           step="0.1"
@@ -32,7 +59,6 @@
         <button type="submit">Salvar Alterações</button>
       </form>
 
-      <!-- Botão para retornar à página principal sem alterar nada -->
       <a href="{{ url_for('inicio') }}" class="btn-voltar"
         >⬅️ Voltar para a página inicial</a
       >

@@ -12,61 +12,57 @@ db = SQLAlchemy(app)
 
 # Definindo a estrutura da tabela 'Pet' no banco de dados (nossas colunas)
 class Pet(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # Identificador único de cada pet
+    id = db.Column(db.Integer, primary_key=True) # Identificador único
     nome = db.Column(db.String(100), nullable=False) # Nome do animal
     especie = db.Column(db.String(100), nullable=False) # Espécie (Gato, Cachorro, etc.)
-    kilos = db.Column(db.Float, nullable=False) # Peso do pet em quilos
+    sexo = db.Column(db.String(20), nullable=False) # NOVO: Sexo do animal
+    kilos = db.Column(db.Float, nullable=False) # Peso do pet
 
-# Criando o banco de dados e a tabela automaticamente se não existirem
+# Criando o banco de dados e a tabela automaticamente
 with app.app_context():
     db.create_all()
 
-# Rota principal (Página Inicial): Mostra a lista e cadastra novos pets
+# Rota principal (Página Inicial): Mostra a lista e cadastra
 @app.route('/', methods=['GET', 'POST'])
 def inicio():
-    # Se o usuário clicou no botão "Cadastrar Pet" (método POST)
     if request.method == 'POST':
         nome_pet = request.form.get('nome')
         especie_pet = request.form.get('especie')
+        sexo_pet = request.form.get('sexo') # Puxando o sexo do formulário
         kilos_pet = request.form.get('kilos')
         
-        # Cria um novo objeto Pet com os dados preenchidos
-        novo_pet = Pet(nome=nome_pet, especie=especie_pet, kilos=float(kilos_pet))
-        db.session.add(novo_pet) # Adiciona no banco
-        db.session.commit() # Salva definitivamente
+        # Cria um novo objeto Pet incluindo o sexo
+        novo_pet = Pet(nome=nome_pet, especie=especie_pet, sexo=sexo_pet, kilos=float(kilos_pet))
+        db.session.add(novo_pet)
+        db.session.commit()
         
-        # Recarrega a página limpa para mostrar o pet recém-cadastrado
         return redirect(url_for('inicio'))
     
-    # Se for apenas acesso normal (método GET), busca todos os pets salvos
     lista_pets = Pet.query.all()
-    # Envia a lista de pets para o arquivo HTML exibir na tela
     return render_template('index.html', pets=lista_pets)
 
-# Rota para DELETAR um pet do banco de dados pelo ID dele
+# Rota para DELETAR
 @app.route('/deletar/<int:id>')
 def deletar(id):
-    pet = Pet.query.get_or_404(id) # Procura o pet ou dá erro 404 se não achar
-    db.session.delete(pet) # Deleta o registro
-    db.session.commit() # Salva a alteração
+    pet = Pet.query.get_or_404(id)
+    db.session.delete(pet)
+    db.session.commit()
     return redirect(url_for('inicio'))
 
-# Rota para EDITAR os dados de um pet existente
+# Rota para EDITAR
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
-    pet = Pet.query.get_or_404(id) # Localiza o pet que queremos alterar
+    pet = Pet.query.get_or_404(id)
     
-    # Se o usuário enviou o formulário de alteração preenchido
     if request.method == 'POST':
         pet.nome = request.form.get('nome')
         pet.especie = request.form.get('especie')
+        pet.sexo = request.form.get('sexo') # Atualiza o sexo
         pet.kilos = float(request.form.get('kilos'))
-        db.session.commit() # Salva as atualizações no banco
+        db.session.commit()
         return redirect(url_for('inicio'))
         
-    # Se apenas abriu a página de edição, mostra o formulário preenchido com os dados antigos
     return render_template('editar.html', pet=pet)
 
-# Executando o servidor web localmente
 if __name__ == '__main__':
     app.run(debug=True)
