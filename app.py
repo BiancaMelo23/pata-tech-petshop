@@ -1,64 +1,67 @@
-# Importando as ferramentas necessárias do Flask e do Banco de Dados
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy #(Essa parte prepara/importa as ferramentas que serão usadas)
 
-# Inicializando o aplicativo do Flask
-app = Flask(__name__)
+app = Flask(__name__) # ("Liga" o petshop)
 
-# Configurando o endereço do nosso banco de dados local (SQLite)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pets.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+db = SQLAlchemy(app) # ( Aqui acontece a conexão com o banco de dados "pets.db")
 
-# Definindo a estrutura da tabela 'Pet' no banco de dados (nossas colunas)
+# Aqui abaixo a gente cria a tabela no banco de dados (id, nome, especie, raca, sexo, kilos)
 class Pet(db.Model):
-    id = db.Column(db.Integer, primary_key=True) # Identificador único
-    nome = db.Column(db.String(100), nullable=False) # Nome do animal
-    especie = db.Column(db.String(100), nullable=False) # Espécie (Gato, Cachorro, etc.)
-    sexo = db.Column(db.String(20), nullable=False) # NOVO: Sexo do animal
-    kilos = db.Column(db.Float, nullable=False) # Peso do pet
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    especie = db.Column(db.String(100), nullable=False)
+    raca = db.Column(db.String(100), nullable=False)
+    sexo = db.Column(db.String(20), nullable=False)
+    kilos = db.Column(db.Float, nullable=False)
 
-# Criando o banco de dados e a tabela automaticamente
 with app.app_context():
-    db.create_all()
+    db.create_all() # aqui transforma o id(numero de identificação ) em algo existente em nosso computador)
 
-# Rota principal (Página Inicial): Mostra a lista e cadastra
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST']) #essa parte o código cria a página inicial e verifica se o usuário apenas entrou nela ou se enviou alguma coisa.
 def inicio():
     if request.method == 'POST':
+       
+        
+        # Pega os dados que a gente digita
         nome_pet = request.form.get('nome')
         especie_pet = request.form.get('especie')
-        sexo_pet = request.form.get('sexo') # Puxando o sexo do formulário
+        raca_pet = request.form.get('raca')
+        sexo_pet = request.form.get('sexo')
         kilos_pet = request.form.get('kilos')
         
-        # Cria um novo objeto Pet incluindo o sexo
-        novo_pet = Pet(nome=nome_pet, especie=especie_pet, sexo=sexo_pet, kilos=float(kilos_pet))
+       
+        # Cria um pacote com os dados que a gente digitou e salva
+        novo_pet = Pet(nome=nome_pet, especie=especie_pet, raca=raca_pet, sexo=sexo_pet, kilos=float(kilos_pet))
         db.session.add(novo_pet)
         db.session.commit()
         
         return redirect(url_for('inicio'))
     
+    # pega todos os pets do banco de dados pra mostrar no html
     lista_pets = Pet.query.all()
     return render_template('index.html', pets=lista_pets)
 
-# Rota para DELETAR
 @app.route('/deletar/<int:id>')
 def deletar(id):
-    pet = Pet.query.get_or_404(id)
+    # busca o pet pelo id e apaga
+    pet = Pet.query.get(id)
     db.session.delete(pet)
     db.session.commit()
     return redirect(url_for('inicio'))
 
-# Rota para EDITAR
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
-    pet = Pet.query.get_or_404(id)
+    pet = Pet.query.get(id)
     
     if request.method == 'POST':
+        # atualiza com os dados novos que vieram do html
         pet.nome = request.form.get('nome')
         pet.especie = request.form.get('especie')
-        pet.sexo = request.form.get('sexo') # Atualiza o sexo
+        pet.raca = request.form.get('raca')
+        pet.sexo = request.form.get('sexo')
         pet.kilos = float(request.form.get('kilos'))
+        
         db.session.commit()
         return redirect(url_for('inicio'))
         

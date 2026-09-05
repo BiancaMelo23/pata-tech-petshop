@@ -19,9 +19,11 @@
 
       <form action="/editar/{{ pet.id }}" method="POST">
         <input type="text" name="nome" value="{{ pet.nome }}" required />
+        <!-- é o que faz a caixinha já vir preenchida com o nome/valor antigo do pet-->
         <input type="text" name="especie" value="{{ pet.especie }}" required />
 
-        <!-- NOVO: Seleciona o sexo atual automaticamente na hora de editar -->
+        <input type="text" name="raca" value="{{ pet.raca }}" required />
+
         <select name="sexo" required>
           <option
             value="Macho"

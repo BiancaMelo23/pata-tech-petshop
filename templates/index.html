@@ -17,21 +17,26 @@
       <h1>🐾 Pata Tech Petshop 🐾</h1>
       <p>Cadastre os pets e acompanhe os atendimentos em tempo real.</p>
 
+      <!-- pesquisei como contar o tamanho da lista no jinja e achei esse length -->
       <p class="contador">
         🐾 Total de pets cadastrados: <strong>{{ pets | length }}</strong>
       </p>
 
-      <!-- Formulário atualizado com o campo de Sexo -->
       <form action="/" method="POST">
-        <input type="text" name="nome" placeholder="Nome do Pet" required />
+        <!-- Aqui avisa quando cliclamos em algum botao e manda pro python e os inputs são a caixinhas em branco que a gente digita os dados -->
         <input
           type="text"
           name="especie"
           placeholder="Espécie (Ex: Gato)"
           required
         />
+        <input
+          type="text"
+          name="raca"
+          placeholder="Raça (Ex: Persa)"
+          required
+        />
 
-        <!-- NOVO: Campo de seleção para o Sexo -->
         <select name="sexo" required>
           <option value="" disabled selected>Selecione o Sexo</option>
           <option value="Macho">Macho</option>
@@ -51,18 +56,17 @@
       <h2>Pets Cadastrados:</h2>
 
       <div class="lista-container">
+        <!-- Aqui o jinja pega cada pet da lista e mostra suas informações na página, como nome, espécie e emoji.-->
         {% for pet in pets %}
         <div class="pet-card">
           <div class="pet-info">
             <span class="info-nome">
-              {% if 'gato' in pet.especie | lower or 'gata' in pet.especie |
-              lower %} 🐱 {% elif 'cao' in pet.especie | lower or 'cão' in
-              pet.especie | lower or 'cachorro' in pet.especie | lower or
-              'cachorra' in pet.especie | lower %} 🐶 {% else %} 🐾 {% endif %}
-              {{ pet.nome }}
+              {% if pet.especie == 'Gato' or pet.especie == 'gato' %} 🐱 {% elif
+              pet.especie == 'Cachorro' or pet.especie == 'cachorro' %} 🐶 {%
+              else %} 🐾 {% endif %} {{ pet.nome }}
             </span>
             <span class="info-tag">Espécie: {{ pet.especie }}</span>
-            <!-- NOVO: Mostrando o sexo do pet cadastrado -->
+            <span class="info-tag">Raça: {{ pet.raca }}</span>
             <span class="info-tag">Sexo: {{ pet.sexo }}</span>
             <span class="info-tag">Peso: {{ pet.kilos }} kg</span>
           </div>
