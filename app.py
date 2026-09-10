@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy #(Essa parte prepara/importa as ferramen
 
 app = Flask(__name__) # ("Liga" o petshop)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pets.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/petshop'
 db = SQLAlchemy(app) # ( Aqui acontece a conexão com o banco de dados "pets.db")
 
 # Aqui abaixo a gente cria a tabela no banco de dados (id, nome, especie, raca, sexo, kilos)
