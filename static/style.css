@@ -32,7 +32,7 @@ body {
 }
 
 h1 {
-  color: #d35400;
+  color: #070707;
   font-weight: 700;
   font-size: 25px;
   margin-bottom: 5px;
@@ -82,7 +82,7 @@ select {
 
 input:focus,
 select:focus {
-  border-color: #ff9f43;
+  border-color: #ee800a;
   background-color: #fff;
   box-shadow: 0 0 8px rgba(255, 159, 67, 0.5);
 }
@@ -91,7 +91,7 @@ select:focus {
 button {
   width: 100%;
   padding: 10px 15px;
-  background: linear-gradient(135deg, #ff9f43, #e67e22);
+  background: linear-gradient(135deg, #f97e0c, #0b0b0b);
   color: white;
   border: 2px solid #000000;
   border-radius: 8px;
@@ -159,7 +159,7 @@ h2 {
 
 .info-tag {
   background: #fff3e6;
-  color: #d35400;
+  color: #161616;
   padding: 3px 6px;
   border-radius: 6px;
   font-size: 11px;

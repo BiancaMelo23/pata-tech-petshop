@@ -3,27 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <title>Pata Tech Petshop</title>
+    <!-- Puxa a fonte Poppins do Google Fonts para estilizar as letras de forma bonita -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- Conecta esta página com o arquivo de estilos CSS -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}"
     />
   </head>
   <body>
+    <!-- A div 'container' centraliza e organiza todo o conteúdo no meio da tela -->
     <div class="container">
       <h1>🐾 Pata Tech Petshop 🐾</h1>
       <p>Cadastre os pets e acompanhe os atendimentos em tempo real.</p>
 
-      <!-- pesquisei como contar o tamanho da lista no jinja e achei esse length -->
+      <!-- aqui é onde leva o usuário para a tela de gerenciamento de tutores (clientes) -->
+      <div style="text-align: center; margin-bottom: 20px">
+        <a
+          href="/tutores"
+          style="
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #e67e22;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          "
+          >👥 Gerenciar Tutores (Clientes)</a
+        >
+      </div>
+
+      <!-- Contador, usa a função 'length' do Jinja para contar quantos pets existem na lista -->
       <p class="contador">
         🐾 Total de pets cadastrados: <strong>{{ pets | length }}</strong>
       </p>
 
+      <!-- fomrmulario de cadastro dos pets -->
       <form action="/" method="POST">
-        <!-- Aqui avisa quando cliclamos em algum botao e manda pro python e os inputs são a caixinhas em branco que a gente digita os dados -->
         <input
           type="text"
           name="nome"
@@ -43,46 +64,76 @@
           required
         />
 
+        <!-- Caixinha de seleção (dropdown) para escolher o sexo -->
         <select name="sexo" required>
           <option value="" disabled selected>Selecione o Sexo</option>
           <option value="Macho">Macho</option>
           <option value="Fêmea">Fêmea</option>
         </select>
 
+        <!-- Campo de número com 'step="0.1"' para permitir pesos quebrados (ex: 4.5 kg) -->
         <input
           type="number"
-          step="0.1"
+          step="0.001"
           name="kilos"
           placeholder="Peso (kg)"
           required
         />
+
+        <!-- Puxa todos os tutores cadastrados no banco para vincular ao pet -->
+        <select name="tutor_id" required>
+          <option value="" disabled selected>
+            👤 Selecione o Dono (Tutor)
+          </option>
+          <!-- Laço 'for' que cria uma opção no menu para cada tutor existente -->
+          {% for tutor in tutores %}
+          <option value="{{ tutor.id }}">{{ tutor.nome }}</option>
+          {% endfor %}
+        </select>
+
         <button type="submit">Cadastrar Pet</button>
       </form>
 
       <h2>Pets Cadastrados:</h2>
 
+      <!-- Lista de pet -->
       <div class="lista-container">
-        <!-- Aqui o jinja pega cada pet da lista e mostra suas informações na página, como nome, espécie e emoji.-->
+        <!-- Laço 'for' que passa por cada pet e cria um "cartão" individual na tela -->
         {% for pet in pets %}
         <div class="pet-card">
           <div class="pet-info">
+            <!-- Lógica visual: exibe um emoji de gatinho, cachorro ou patinha dependendo da espécie digitada -->
             <span class="info-nome">
               {% if pet.especie == 'Gato' or pet.especie == 'gato' %} 🐱 {% elif
               pet.especie == 'Cachorro' or pet.especie == 'cachorro' %} 🐶 {%
               else %} 🐾 {% endif %} {{ pet.nome }}
             </span>
+
+            <!-- Aqui eu tivemos um insight onde verifica se o pet ainda tem dono. 
+                 Se o tutor foi excluído, exibe um aviso em vermelho, preservando o histórico médico do pet! -->
+            <span class="info-tag">
+              <strong>Tutor:</strong>
+              {% if pet.dono %} {{ pet.dono.nome }} {% else %}
+              <span style="color: red">⚠️ Tutor Excluído do Sistema</span>
+              {% endif %}
+            </span>
+
             <span class="info-tag">Espécie: {{ pet.especie }}</span>
             <span class="info-tag">Raça: {{ pet.raca }}</span>
             <span class="info-tag">Sexo: {{ pet.sexo }}</span>
             <span class="info-tag">Peso: {{ pet.kilos }} kg</span>
           </div>
+
+          <!-- Botões de ação para cada pet individual -->
           <div class="acoes">
+            <!-- Botão de Editar (leva para a rota /editar com o ID do pet) -->
             <a
               href="/editar/{{ pet.id }}"
               class="btn-acao btn-editar"
               title="Editar"
               >✏️</a
             >
+            <!-- Botão de Excluir (leva para a rota /deletar com o ID do pet) -->
             <a
               href="/deletar/{{ pet.id }}"
               class="btn-acao btn-excluir"
@@ -92,6 +143,7 @@
           </div>
         </div>
         {% else %}
+        <!-- Caso a lista esteja totalmente vazia, exibe este aviso -->
         <p class="vazio">Nenhum pet cadastrado ainda. Seja o primeiro!</p>
         {% endfor %}
       </div>

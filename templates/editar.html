@@ -1,26 +1,38 @@
 <!doctype html>
+<!--A tag <html> abraça toda a página. O 'lang="pt-BR"' avisa ao navegador que o site é em português do Brasil, ajudando até em leitores de tela e tradutores automáticos. -->
 <html lang="pt-BR">
   <head>
+    <!--  O <head> é o "cérebro" da página. Tudo aqui são configurações de bastidores que não aparecem diretamente na tela. -->
+    
+    <!-- Essa linha abaixo garante que acentos (á, ç, ã) e emojis funcionem perfeitamente e não fiquem com aqueles símbolos estranhos. -->
+    <meta charset="UTF-8" />
+    
     <title>Editar Pet - Pata Tech Petshop</title>
     
     <!-- Puxa a fonte poppins lá do google pra deixar a letra do jeito que queremos  -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     
     <!-- aqui avisa pro HTML onde encontrar o arquivo 'style.css'-->
+    <!-- As chaves duplas são como um alerta do Jinja (a ferramenta do Flask). Elas mandam para o python que ele descubra qual é o endereço (url) da pasta static e ache o style.css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
+
   <body>
+    <!-- O <body> é o "corpo". Tudo que o usuário realmente vê na tela fica aqui dentro. -->
+    
+    <!--  A classe "container" é uma caixinha que criamos no CSS para deixar o conteúdo centralizado e arrumadinho no meio da tela -->
     <div class="container">
       <h1>🐾 Editar Pet 🐾</h1>
       <p>Altere os dados do pet selecionado.</p>
 
-      <!-- O formulário! Quando a gente clica em salvar, ele manda os novos dados escondidos (method="POST") lá pra rota '/editar/numero-do-pet' do nosso Python -->
+      <!-- O formulário, quando a gente clica em salvar, ele manda os novos dados escondidos (method="POST") lá pra rota '/editar/numero-do-pet' do nosso Python -->
       <form action="/editar/{{ pet.id }}" method="POST">
         
         <!-- Aqui pega o nome do pet que já estava lá no banco de dados e coloca dentro da caixinha. Assim a gente só altera o que quiser sem precisar digitar tudo do zero -->
+        <!-- O atributo 'value' é quem faz preencher a caixinha. O 'placeholder' é aquele textinho cinza que só aparece se a caixinha estiver vazia. -->
         <input type="text" name="nome" value="{{ pet.nome }}" placeholder="Nome do Pet" required />
         <input type="text" name="especie" value="{{ pet.especie }}" placeholder="Espécie" required />
-        <input type="text" name="raca" value="{{ pet.raca }}" placeholder="Raça" required />
+        <input type="text" name="raca" value="{{ pet.raca }}" placeholder="Relação/Raça" required />
 
         <!-- Aqui a gente usa um pouquinho de lógica (Jinja) dentro do HTML. Ele checa: se o sexo salvo no banco era 'Macho', ele já deixa essa opção pré-marcada (selected) pra gente na tela. -->
         <select name="sexo" required>
@@ -28,13 +40,26 @@
           <option value="Fêmea" {% if pet.sexo == 'Fêmea' %}selected{% endif %}>Fêmea</option>
         </select>
 
-        <input type="number" step="0.1" name="kilos" value="{{ pet.kilos }}" placeholder="Peso (kg)" required />
+        <!-- caixinha para selecionar ou alterar o Tutor (dono) do pet na edição -->
+<select name="tutor_id" required>
+  <option value="" disabled>Selecione o Dono (Tutor)</option>
+  {% for tutor in tutores %}
+    <option value="{{ tutor.id }}" {% if pet.tutor_id == tutor.id %}selected{% endif %}>
+      {{ tutor.nome }} (CPF: {{ tutor.cpf }})
+    </option>
+  {% endfor %}
+</select>
+
+        <!-- O 'type="number"' obriga o usuário a digitar só números. O 'step="0.001"' permite números bem quebrados para animais leves, como passarinhos (ex: 0.05 para 50g). -->
+        <input type="number" step="0.001" name="kilos" value="{{ pet.kilos }}" placeholder="Peso (kg) - Ex: 0.05" required />
         
         <!-- Botão que pega tudo que tá nas caixinhas e envia de volta pro app.py  pra atualizar o banco -->
         <button type="submit">Salvar Alterações</button>
       </form>
 
-      <!-- Botãozinho simples de voltar para pagina incial sabe -->
+      <br>
+      <!-- Botão simples de voltar para pagina incial sabe -->
+      <!--  O 'url_for('inicio')' é ótimo porque se um dia você mudar a rota no app.py, o Flask atualiza esse link automaticamente sem você precisar mexer aqui. -->
       <a href="{{ url_for('inicio') }}" class="btn-voltar">⬅️ Voltar para a página inicial</a>
     </div>
   </body>

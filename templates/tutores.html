@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutores - Pata Tech</title>
+    <!-- Conecta esta página com o arquivo de estilos (CSS) para deixar tudo colorido e bonito -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- A div 'container' é como uma caixa invisível que centraliza e organiza o conteúdo no meio da tela -->
+    <div class="container">
+        <h1>🐾 Cadastro de Tutores (Clientes)</h1> 
+        <!-- É aqui que o usuário digita os dados.                        -->
+        <!-- 'action="/tutores"' diz para onde enviar os dados quando clicar em salvar -->
+        <form action="/tutores" method="POST">
+            
+            <!-- Usamos divs para separar cada campo, assim eles ficam um embaixo do outro -->
+            <div>
+                <label>Nome do Tutor:</label>
+                <!-- 'name="nome"' é o que o Python vai usar para achar essa informação lá no app.py -->
+                <input type="text" name="nome" placeholder="Ex: João da Silva" required>
+            </div>
+
+            <!-- Campo para o CPF com formatação automática (oninput) -->
+            <div>
+                <label>CPF:</label>
+                <input type="text" name="cpf" placeholder="Ex: 000.000.000-00" oninput="mascaraCPF(this)" required>
+            </div>
+            
+            <!-- Campo para o Telefone com formatação automática (oninput) -->
+            <div>
+                <label>Telefone / WhatsApp:</label>
+                <input type="text" name="telefone" placeholder="Ex: (11) 99999-9999" oninput="mascaraTelefone(this)" required>
+            </div>
+
+            <!-- Campo para o E-mail (type="email" já ajuda a validar se tem um @ na hora de digitar) -->
+            <div>
+                <label>E-mail:</label>
+                <input type="email" name="email" placeholder="Ex: joao@email.com" required>
+            </div>
+            
+            <!-- O botão 'submit' funciona como um "enviar pacote" para o Python -->
+            <button type="submit">Salvar Tutor</button>
+        </form>
+     
+        <!-- A tag <hr> cria uma linha deitada para separar visualmente a parte de cima da parte de baixo -->
+        <hr>
+
+        <h2>📋 Lista de Tutores</h2>
+        
+        <!-- Aqui transformamos a antiga tabela em caixinhas organizadas para melhor leitura -->
+        <div class="lista-tutores" style="max-height: 400px; overflow-y: auto;">
+            
+            <!-- O laço 'for' funciona como uma impressora repetitiva. 
+                 Ele pega a lista 'tutores' que o Python enviou e cria um cartão para cada um. -->
+            {% for tutor in tutores %}
+            <div style="background-color: white; border: 2px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: left;">
+                
+                <!-- As chaves duplas mostram as variáveis (dados) que vieram do banco de dados -->
+                <p style="margin: 0 0 8px 0; font-size: 1.1em;"><strong>👤 Nome:</strong> {{ tutor.nome }}</p>
+                
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 8px;">
+                    <p style="margin: 0;"><strong>💳 CPF:</strong> {{ tutor.cpf }}</p>
+                    <p style="margin: 0;"><strong>📱 Tel:</strong> {{ tutor.telefone }}</p>
+                </div>
+                
+                <p style="margin: 0 0 15px 0;"><strong>📧 E-mail:</strong> {{ tutor.email }}</p>
+                
+                <!-- Botões de Ação (Editar e Excluir) alinhados à direita -->
+                <div style="text-align: right;">
+                    <!-- Esse link leva para a rota do Python de editar, carregando junto o ID desse tutor -->
+                    <a href="/editar_tutor/{{ tutor.id }}" class="btn-acao btn-editar" title="Editar Tutor" style="text-decoration: none; font-size: 1.4em; margin-right: 15px;">✏️</a>
+                    
+                    <!-- botão de excluir com mensagem de alerta -->
+                    <a href="/deletar_tutor/{{ tutor.id }}" class="btn-acao btn-excluir" title="Excluir Tutor" onclick="return confirm('Tem certeza? Os pets deste tutor continuarão salvos no sistema.');" style="text-decoration: none; font-size: 1.4em;">🗑️</a>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- Fim do laço 'for'. A "impressora" para de repetir aqui. -->
+            
+        </div>
+
+        <br>
+        <!-- Link simples para voltar para a tela inicial (onde ficam os pets) -->
+        <div style="text-align: center;">
+            <a href="/" style="color: #e67e22; font-weight: bold; text-decoration: none; font-size: 1.1em;">⬅️ Voltar para Pets</a>
+        </div>
+    </div>
+
+    <!-- Código javascript: Aqui são as funções que colocam os pontos e parênteses automaticamente enquanto digita -->
+    <script>
+        function mascaraCPF(campo) {
+            let valor = campo.value.replace(/\D/g, ""); // Remove tudo o que não for número
+            if (valor.length > 11) valor = valor.slice(0, 11); // Limita a 11 dígitos
+            valor = valor.replace(new RegExp("(\\d{3})(\\d)"), "$1.$2"); // Coloca o primeiro ponto
+            valor = valor.replace(new RegExp("(\\d{3})(\\d)"), "$1.$2"); // Coloca o segundo ponto
+            valor = valor.replace(new RegExp("(\\d{3})(\\d{1,2})$"), "$1-$2"); // Coloca o tracinho
+            campo.value = valor;
+        }
+
+        function mascaraTelefone(campo) {
+            let valor = campo.value.replace(/\D/g, ""); // Aqui remove tudo o que não for número
+            if (valor.length > 11) valor = valor.slice(0, 11); // Aqui limita a 11 dígitos
+            valor = valor.replace(new RegExp("^(\\d{2})(\\d)"), "($1) $2"); // Aqui coloca os parênteses no DDD
+            valor = valor.replace(new RegExp("(\\d)(\\d{4})$"), "$1-$2"); // Aqui coloca o tracinho no meio
+            campo.value = valor;
+        }
+    </script>
+</body>
+</html>

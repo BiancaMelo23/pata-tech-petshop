@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Editar Tutor - Pata Tech</title>
+    <!-- Puxa o seu CSS para essa tela não ficar desarrumada e seguir o mesmo padrão das outras -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    
+    <div class="container">
+      <h1>✏️ Editar Cadastro do Tutor</h1>
+      <p>Atualize as informações do cliente abaixo.</p>
+
+      
+      <!-- Formulário de edição -->
+      <!-- method="POST" avisa que estamos enviando dados ocultos de forma segura.   -->
+      <!-- action="/editar_tutor/{{ tutor.id }}" manda esses dados exatamente para a rota que criamos no app.py, levando junto o ID do tutor.-->
+      
+      <form action="/editar_tutor/{{ tutor.id }}" method="POST">
+        
+        <!--  O segredo da edição está no atributo 'value'. -->
+        <!-- Ao colocar 'value="{{ tutor.nome }}"', o Jinja vai no banco de dados, pega o nome que já estava salvo e preenche a caixinha automaticamente. -->                                    
+        <div>
+            <label>Nome Completo:</label>
+            <input type="text" name="nome" value="{{ tutor.nome }}" required />
+        </div>
+        
+        <div>
+            <label>CPF:</label>
+            <!-- Aqui o oninput="mascaraCPF(this)" para manter a formatação automática na hora de editar -->
+            <input type="text" name="cpf" value="{{ tutor.cpf }}" oninput="mascaraCPF(this)" required />
+        </div>
+        
+        <div>
+            <label>Telefone / WhatsApp:</label>
+            <!-- Aqui o oninput="mascaraTelefone(this)" para manter a formatação automática na hora de editar -->
+            <input type="text" name="telefone" value="{{ tutor.telefone }}" oninput="mascaraTelefone(this)" required />
+        </div>
+        
+        <!-- O type="email" já avisa o navegador para exigir o símbolo de '@' -->
+        <div>
+            <label>E-mail:</label>
+            <input type="email" name="email" value="{{ tutor.email }}" required />
+        </div>
+
+        <!-- Botão que empacota essas caixinhas e envia pro Python salvar -->
+        <button type="submit">Salvar Alterações</button>
+      </form>
+      
+      <br>
+      
+      <!-- Link simples caso a pessoa tenha clicado sem querer e queira desistir da edição -->
+      <div style="text-align: center;">
+          <a href="/tutores" class="btn-voltar" style="color: #e67e22; font-weight: bold; text-decoration: none;">⬅️ Cancelar e Voltar</a>
+      </div>
+      
+    </div>
+
+    <!-- Código javascript: Estas são as funções que colocam os pontos e parênteses automaticamente enquanto digita -->
+    <script>
+        function mascaraCPF(campo) {
+            let valor = campo.value.replace(/\D/g, ""); // Remove tudo o que não for número
+            if (valor.length > 11) valor = valor.slice(0, 11); // Limita a 11 dígitos
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca o primeiro ponto
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca o segundo ponto
+            valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Coloca o tracinho
+            campo.value = valor;
+        }
+
+        function mascaraTelefone(campo) {
+            let valor = campo.value.replace(/\D/g, ""); // Remove tudo o que não for número
+            if (valor.length > 11) valor = valor.slice(0, 11); // Limita a 11 dígitos
+            valor = valor.replace(/^(\d{2})(\d)/g, "($1) $2"); // Coloca os parênteses no DDD
+            valor = valor.replace(/(\d)(\d{4})$/, "$1-$2"); // Coloca o tracinho no meio
+            campo.value = valor;
+        }
+    </script>
+  </body>
+</html>
