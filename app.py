@@ -30,10 +30,10 @@ class Pet(db.Model):
 # caso o tutor seja excluído do sistema, mantendo o historico do pet.
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.id'), nullable=True)
 
-# NOVO AC3: Cria a ligação para podermos ver os agendamentos de um pet específico
+# Cria a ligação para podermos ver os agendamentos de um pet específico
     agendamentos = db.relationship('Agendamento', backref='pet_agendado', lazy=True)
 
-# NOVO AC3: Aqui criamos a tabela de Agendamentos (banho, tosa, etc)
+# Aqui criamos a tabela de Agendamentos (banho, tosa, etc)
 class Agendamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     servico = db.Column(db.String(100), nullable=False) # Ex: Banho, Tosa, Consulta
