@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- Configurações básicas para o navegador entender acentos e o tamanho da tela -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos - Pata Tech</title>
+    
+    <!-- Puxando a mesma fonte bonita (Poppins) da página inicial -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Conectando o seu arquivo style.css principal para pegar o fundo dos pets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- CSS extra apenas para organizar as caixinhas e a tabela desta página -->
+    <style>
+        /* Formata a caixa branca ao redor do formulário */
+        .form-agendamento {
+            display: flex; /* Permite empilhar os itens */
+            flex-direction: column; /* Coloca um item embaixo do outro */
+            align-items: center; /* Centraliza tudo no meio */
+            gap: 15px; /* Espaço entre as caixinhas */
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 12px; /* Deixa as bordas arredondadas */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Sombra leve */
+            margin-bottom: 30px;
+        }
+        
+        /* Formata os textos (labels) acima das caixinhas */
+        .form-agendamento label {
+            font-weight: 600;
+            margin-bottom: -8px;
+            width: 85%; /* Mesma largura das caixas de texto */
+            max-width: 500px;
+            text-align: left; /* Joga o texto para a esquerda */
+        }
+        
+        /* Formata as caixinhas de digitar e de selecionar */
+        .form-agendamento select, .form-agendamento input {
+            width: 85%; /* Deixa a caixa larguinha para caber nomes grandes */
+            max-width: 500px;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        
+        /* Formata o botão verde de agendar */
+        .btn-agendar {
+            width: 85%;
+            max-width: 500px;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer; /* Muda a setinha do mouse para uma mãozinha */
+            transition: 0.3s; /* Deixa o efeito de passar o mouse mais suave */
+            margin-top: 10px;
+        }
+        .btn-agendar:hover {
+            background-color: #45a049; /* Escurece um pouco quando passa o mouse */
+        }
+        
+        /* NOVO: Caixa que envolve a tabela para criar a barra de rolagem */
+        .tabela-wrapper {
+            width: 100%;
+            overflow-x: auto; /* A mágica da barra de rolagem horizontal acontece aqui! */
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        /* Formata a tabela de serviços marcados */
+        .tabela-agendamentos {
+            width: 100%;
+            min-width: 750px; /* Garante que a tabela tenha um tamanho mínimo, forçando a barra de rolagem a aparecer em telas pequenas */
+            border-collapse: collapse; /* Tira os espaços duplos entre as linhas */
+        }
+        .tabela-agendamentos th {
+            background-color: #e67e22; /* Cor laranja do cabeçalho */
+            color: white;
+            padding: 15px;
+            text-align: left;
+            white-space: nowrap; /* Impede que o texto quebre em duas linhas */
+        }
+        .tabela-agendamentos td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f1f1;
+            white-space: nowrap; /* Impede que o texto da célula esprema e quebre de linha */
+        }
+        
+        /* Cores das etiquetas de Status */
+        .status-badge {
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px; /* Deixa parecendo uma pílula */
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-pendente { background-color: #f1c40f; } /* Amarelo */
+        .status-concluido { background-color: #2ecc71; } /* Verde */
+        .status-cancelado { background-color: #e74c3c; } /* Vermelho */
+        
+        /* Efeito de zoom nos botões de Editar e Excluir */
+        .acoes a {
+            text-decoration: none;
+            font-size: 18px;
+            margin-right: 10px;
+            transition: 0.2s;
+        }
+        .acoes a:hover { transform: scale(1.3); display: inline-block; } /* Dá um zoom no emoji */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Agendamento de Serviços 🐾</h1>
+        
+        <!-- Botão de voltar estilizado combinando com o sistema -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="/" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                ⬅ Voltar para a Tela Inicial
+            </a>
+        </div>
+
+        <h2>Novo Agendamento</h2>
+        
+        <!-- FORMULÁRIO: Envia os dados para o backend via POST -->
+        <form action="/agendamentos" method="POST" class="form-agendamento">
+            
+            <label>Selecione o Pet:</label>
+            <select name="pet_id" required>
+                <option value="" disabled selected>Escolha um pet cadastrado...</option>
+                <!-- O Jinja repete essa linha para criar as opções de pets -->
+                {% for pet in pets %}
+                    <!-- Aqui tem um pequeno "if" inline para mostrar o nome do dono, ou "Sem Tutor" se foi apagado -->
+                    <option value="{{ pet.id }}">🐾 {{ pet.nome }} (Dono: {{ pet.dono.nome if pet.dono else 'Sem Tutor' }})</option>
+                {% endfor %}
+            </select>
+
+            <label>Serviço:</label>
+            <select name="servico" required>
+                <option value="Banho">🛁 Banho</option>
+                <option value="Tosa">✂️ Tosa</option>
+                <option value="Banho e Tosa">🛁✂️ Banho e Tosa</option>
+                <option value="Consulta Veterinária">🩺 Consulta Veterinária</option>
+            </select>
+
+            <!-- Aqui está o campo de valor dos serviços oferecidos -->
+            <label>Valor (R$):</label>
+            <!-- O 'step="0.01"' permite que você digite centavos (ex: 50.50) -->
+            <input type="number" step="0.01" name="valor" placeholder="Ex: 50.00" required>
+
+            <label>Data:</label>
+            <input type="date" name="data" required>
+
+            <label>Hora:</label>
+            <input type="time" name="hora" required>
+
+            <button type="submit" class="btn-agendar">✅ Agendar Serviço</button>
+        </form>
+
+        <h2>Serviços Agendados</h2>
+        
+        <!--  Aqui a div "tabela-wrapper" abraça a tabela para criar a barra de rolagem -->
+        <div class="tabela-wrapper">
+            <table class="tabela-agendamentos">
+                <thead>
+                    <!-- Cabeçalho da tabela com as novas colunas -->
+                    <tr>
+                        <th>Pet</th>
+                        <th>Serviço</th>
+                        <th>Valor</th> <!-- Nova coluna -->
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Status</th>
+                        <th>Ações</th> <!-- Nova coluna -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- O Jinja cria uma linha para cada serviço marcado no banco de dados -->
+                    {% for agendamento in agendamentos %}
+                    <tr>
+                        <!-- Puxa o nome do Pet através da relação do banco -->
+                        <td><strong>{{ agendamento.pet_agendado.nome }}</strong></td>
+                        
+                        <td>{{ agendamento.servico }}</td>
+                        
+                        <!-- Aqui o "%.2f"|format(...) garante que o preço sempre tenha duas casas decimais (ex: 50.00) -->
+                        <td>R$ {{ "%.2f"|format(agendamento.valor) }}</td>
+                        
+                        <!-- Formata a data (dia/mês/ano) e a hora (hora:minuto) -->
+                        <td>{{ agendamento.data_agendamento.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ agendamento.hora_agendamento.strftime('%H:%M') }}</td>
+                        
+                        <!-- LÓGICA DE CORES DO STATUS: O Jinja verifica a palavra e aplica a classe CSS correta -->
+                        <td>
+                            <span class="status-badge 
+                                {% if agendamento.status == 'Concluído' %}status-concluido
+                                {% elif agendamento.status == 'Cancelado' %}status-cancelado
+                                {% else %}status-pendente{% endif %}">
+                                {{ agendamento.status }}
+                            </span>
+                        </td>
+                        
+                        <!-- Aqui fica os botões de ação lado a lado na tabela -->
+                        <td class="acoes">
+                            <!-- Leva para a página de edição levando o ID do agendamento -->
+                            <a href="/editar_agendamento/{{ agendamento.id }}" title="Editar Serviço">✏️</a>
+                            
+                            <!-- Leva para a rota de exclusão. O 'onclick' cria aquela janelinha de confirmação no navegador! -->
+                            <a href="/deletar_agendamento/{{ agendamento.id }}" title="Excluir Serviço" onclick="return confirm('Tem certeza que deseja apagar este agendamento?');">🗑️</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <!-- Mensagem caso o banco de dados esteja vazio -->
+                    <tr>
+                        <!-- O colspan="7" faz a mensagem ocupar o espaço de todas as 7 colunas -->
+                        <td colspan="7" style="text-align: center; padding: 30px; color: #888;">
+                            Nenhum serviço agendado ainda. Que tal agendar o primeiro?
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> <!-- Fim da div da barra de rolagem -->
+    </div>
+</body>
+</html>

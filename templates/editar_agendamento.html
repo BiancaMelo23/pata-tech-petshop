@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- Configurações básicas para o navegador -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Agendamento - Pata Tech</title>
+    
+    <!-- Puxa a fonte Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!--  Aqui conecta o CSS para puxar o fundo com a imagem dos pets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Aqui também reaproveitamos o mesmo estilo da tela de agendamentos para manter o padrão -->
+    <style>
+        .form-agendamento {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .form-agendamento label {
+            font-weight: 600;
+            margin-bottom: -8px;
+            width: 85%;
+            max-width: 500px;
+            text-align: left;
+        }
+        .form-agendamento select, .form-agendamento input {
+            width: 85%;
+            max-width: 500px;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        /* Botão de Salvar diferente (laranja) para o usuário saber que é uma edição */
+        .btn-salvar {
+            width: 85%;
+            max-width: 500px;
+            padding: 15px;
+            background-color: #e67e22; 
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-salvar:hover {
+            background-color: #d35400;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✏️ Editar Agendamento</h1>
+        
+        <!-- Botão cinza para cancelar e voltar, caso o usuário tenha clicado sem querer -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="/agendamentos" style="display: inline-block; padding: 10px 20px; background-color: #7f8c8d; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                ⬅ Cancelar e Voltar
+            </a>
+        </div>
+
+        <!--  Aqui fica o formulário de edição -->
+        <!-- O 'action' leva o ID do agendamento na URL para o Python saber exatamente quem ele vai atualizar -->
+        <form action="/editar_agendamento/{{ agendamento.id }}" method="POST" class="form-agendamento">
+            
+            <label>Pet Agendado:</label>
+            <select name="pet_id" required>
+                <!-- Laço para mostrar os pets -->
+                {% for pet in pets %}
+                    <!-- Aqui o jinja faz o "if pet.id == agendamento.pet_id" e verifica quem era o pet agendado. -->
+                    <!-- Se for ele, coloca a palavra "selected" para a caixinha já vir preenchida com o nome dele! -->
+                    <option value="{{ pet.id }}" {% if pet.id == agendamento.pet_id %}selected{% endif %}>
+                        🐾 {{ pet.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label>Serviço:</label>
+            <select name="servico" required>
+                <!-- O mesmo truque do "selected" é usado aqui para mostrar o serviço que já estava marcado -->
+                <option value="Banho" {% if agendamento.servico == 'Banho' %}selected{% endif %}>🛁 Banho</option>
+                <option value="Tosa" {% if agendamento.servico == 'Tosa' %}selected{% endif %}>✂️ Tosa</option>
+                <option value="Banho e Tosa" {% if agendamento.servico == 'Banho e Tosa' %}selected{% endif %}>🛁✂️ Banho e Tosa</option>
+                <option value="Consulta Veterinária" {% if agendamento.servico == 'Consulta Veterinária' %}selected{% endif %}>🩺 Consulta Veterinária</option>
+            </select>
+
+            <label>Valor (R$):</label>
+            <!-- value="{{ agendamento.valor }}": Preenche a caixinha com o valor que estava no banco -->
+            <input type="number" step="0.01" name="valor" value="{{ agendamento.valor }}" required>
+
+            <label>Data:</label>
+            <!-- Para a caixinha de data (calendário) vir preenchida no HTML, a data precisa estar no padrão Americano (Ano-Mês-Dia). -->
+            <!-- O strftime('%Y-%m-%d') faz exatamente essa conversão para nós. -->
+            <input type="date" name="data" value="{{ agendamento.data_agendamento.strftime('%Y-%m-%d') }}" required>
+
+            <label>Hora:</label>
+            <!-- Preenche a caixinha de hora com o padrão Hora:Minuto -->
+            <input type="time" name="hora" value="{{ agendamento.hora_agendamento.strftime('%H:%M') }}" required>
+
+            <!-- Aqui fica o campo de mudança dos status -->
+            <label>Status do Serviço:</label>
+            <!-- Borda laranja para chamar a atenção do usuário para este campo -->
+            <select name="status" style="border: 2px solid #e67e22;" required>
+                <option value="Pendente" {% if agendamento.status == 'Pendente' %}selected{% endif %}>⏳ Pendente</option>
+                <option value="Concluído" {% if agendamento.status == 'Concluído' %}selected{% endif %}>✅ Concluído</option>
+                <option value="Cancelado" {% if agendamento.status == 'Cancelado' %}selected{% endif %}>❌ Cancelado</option>
+            </select>
+
+            <button type="submit" class="btn-salvar">💾 Salvar Alterações</button>
+        </form>
+    </div>
+</body>
+</html>
