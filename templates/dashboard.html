@@ -121,6 +121,22 @@
         .btn-concluir-rapido:hover {
             background-color: #27ae60;
         }
+
+        /* Botão de desfazer conclusão caso tenha sido marcado por engano */
+        .btn-desfazer-rapido {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #f39c12;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-desfazer-rapido:hover {
+            background-color: #d68910;
+        }
     </style>
 </head>
 <body>
@@ -176,7 +192,7 @@
         </div>
 
         <h2>🕒 Histórico Geral de Serviços</h2>
-        <!-- Tabela com ação rápida para concluir serviços pendentes -->
+        <!-- Tabela com ação rápida para concluir ou desfazer serviços -->
         <div class="tabela-wrapper">
             <table class="tabela-agendamentos">
                 <thead>
@@ -208,8 +224,18 @@
                         </td>
                         <td>
                             {% if agendamento.status == 'Pendente' %}
-                                <a href="/concluir_agendamento/{{ agendamento.id }}" class="btn-concluir-rapido" title="Finalizar atendimento agora">
+                                <a href="/concluir_agendamento/{{ agendamento.id }}"
+                                   class="btn-concluir-rapido"
+                                   title="Finalizar atendimento agora"
+                                   onclick="return confirm('Tem certeza de que deseja marcar este atendimento como concluído?');">
                                     ✅ Concluir
+                                </a>
+                            {% elif agendamento.status == 'Concluído' %}
+                                <a href="/desfazer_agendamento/{{ agendamento.id }}"
+                                   class="btn-desfazer-rapido"
+                                   title="Desfazer conclusão e voltar para Pendente"
+                                   onclick="return confirm('Deseja desfazer a conclusão e voltar este atendimento para Pendente?');">
+                                    ↩️ Desfazer
                                 </a>
                             {% else %}
                                 <span style="color: #aaa; font-size: 13px;">—</span>

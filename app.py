@@ -271,5 +271,13 @@ def concluir_agendamento(id):
     db.session.commit()
     return redirect(url_for('dashboard'))
 
+# Rota para desfazer a conclusão e voltar o agendamento para Pendente caso tenha sido engano
+@app.route('/desfazer_agendamento/<int:id>')
+def desfazer_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    agendamento.status = 'Pendente'
+    db.session.commit()
+    return redirect(url_for('dashboard'))
+
 if __name__ == '__main__':
     app.run(debug=True)
