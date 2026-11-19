@@ -18,9 +18,9 @@ Projeto desenvolvido em grupo para a disciplina **Produto de Software: Análise,
 ## Diagramas UML
 
 ### Diagrama de Classes
-Representa a estrutura das entidades do sistema (como tutores, pets e agendamentos), seus atributos, relacionamentos e chaves estrangeiras.
+Representa a estrutura das entidades do sistema (como tutores, animais de estimação e agendamentos), seus atributos, relacionamentos e chaves estrangeiras.
 
-![Diagrama de Classes](Imagens-diagramas/Diagrama de Caso de Uso Pata Tech Petshop.drawio.png)
+![Diagrama de Classes](Imagens-diagramas/Diagrama%20de%20Aulas%20Pata%20Tech%20Petshop.drawio.png)
 
 ### Diagrama de Caso de Uso
 Mostra as principais interações do usuário com o sistema, como gerenciar pets e tutores, gerenciar agendamentos e visualizar o dashboard com conclusão de serviços.
