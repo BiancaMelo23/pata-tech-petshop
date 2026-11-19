@@ -34,11 +34,12 @@
             border-radius: 8px;
             font-weight: bold;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 8px;
           "
           >👥 Gerenciar Tutores (Clientes)</a
         >
         
-        <!-- NOVO AC3: Botão que leva o usuário para a nova tela de Agendamentos -->
+        <!-- Aqui fica o botão que leva o usuário para a nova tela de Agendamentos -->
         <a
           href="/agendamentos"
           style="
@@ -51,8 +52,27 @@
             font-weight: bold;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-left: 10px;
+            margin-top: 8px;
           "
           >📅 Agendamentos e Serviços</a
+        >
+
+        <!-- Aqui fica o botão que leva o usuário para o Dashboard Financeiro -->
+        <a
+          href="/dashboard"
+          style="
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #9b59b6;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-left: 10px;
+            margin-top: 8px;
+          "
+          >📊 Dashboard Financeiro</a
         >
       </div>
 
@@ -127,7 +147,7 @@
               else %} 🐾 {% endif %} {{ pet.nome }}
             </span>
 
-            <!-- Aqui eu tivemos um insight onde verifica se o pet ainda tem dono. 
+            <!-- Aqui tivemos um insight onde verifica se o pet ainda tem dono. 
                  Se o tutor foi excluído, exibe um aviso em vermelho, preservando o histórico médico do pet! -->
             <span class="info-tag">
               <strong>Tutor:</strong>

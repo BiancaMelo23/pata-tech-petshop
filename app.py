@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy #Essa parte prepara/importa as ferramentas vão ser usadas
-from datetime import datetime # NOVO AC3: Importado para organizar a data e hora corretamente
+from datetime import datetime # Importado para organizar a data e hora corretamente
 
 app = Flask(__name__) # "Liga" o petshop
 
@@ -220,6 +220,56 @@ def deletar_agendamento(id):
     db.session.delete(agendamento)
     db.session.commit()
     return redirect(url_for('agendamentos'))
+
+# NOVO AC4: Rota para o Dashboard Financeiro e Operacional
+@app.route('/dashboard')
+def dashboard():
+    # Conta quantos registros existem em cada tabela do banco
+    total_tutores = Tutor.query.count()
+    total_pets = Pet.query.count()
+    total_agendamentos = Agendamento.query.count()
+    
+    # Busca todos os agendamentos para calcular os valores e contar os status
+    todos_agendamentos = Agendamento.query.all()
+    
+    faturamento_concluido = 0.0
+    valor_pendente = 0.0
+    qtd_concluidos = 0
+    qtd_pendentes = 0
+    qtd_cancelados = 0
+    
+    for ag in todos_agendamentos:
+        if ag.status == 'Concluído':
+            faturamento_concluido += ag.valor
+            qtd_concluidos += 1
+        elif ag.status == 'Pendente':
+            valor_pendente += ag.valor
+            qtd_pendentes += 1
+        elif ag.status == 'Cancelado':
+            qtd_cancelados += 1
+            
+    # Envia todos esses resultados para a nova tela dashboard.html
+    return render_template(
+        'dashboard.html',
+        total_tutores=total_tutores,
+        total_pets=total_pets,
+        total_agendamentos=total_agendamentos,
+        faturamento_concluido=faturamento_concluido,
+        valor_pendente=valor_pendente,
+        qtd_concluidos=qtd_concluidos,
+        qtd_pendentes=qtd_pendentes,
+        qtd_cancelados=qtd_cancelados,
+        agendamentos=todos_agendamentos
+    )
+
+# Aqui fica a rota rápida para concluir um serviço direto pelo Dashboard 
+# Sem precisar voltar tudo :)
+@app.route('/concluir_agendamento/<int:id>')
+def concluir_agendamento(id):
+    agendamento = Agendamento.query.get_or_404(id)
+    agendamento.status = 'Concluído'
+    db.session.commit()
+    return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
     app.run(debug=True)
